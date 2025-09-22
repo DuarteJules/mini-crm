@@ -31,14 +31,16 @@ func main() {
 
 	if *add {
 		if *email == "" || *name == "" {
+			fmt.Print("Il manque un champ nécessaire")
+		} else {
+			c[len(c)+1] = contact{
+				email: *email,
+				name:  *name,
+			}
+			fmt.Printf("info du contact ajouté index : %v | adresse mail %v | nom : %v \n", len(c), *email, *name)
 
 		}
-		c[len(c)+1] = contact{
-			email: *email,
-			name:  *name,
-		}
 
-		fmt.Printf("info du contact ajouté index : %v | adresse mail %v | nom : %v \n", len(c), *email, *name)
 	} else {
 		r := true
 
