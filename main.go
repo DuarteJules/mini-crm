@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -14,6 +15,17 @@ import (
 type contact struct {
 	email string
 	name  string
+}
+
+func (c contact) Display(index int) {
+	fmt.Printf("info du contact index : %v | adresse mail %v | nom : %v \n", index, c.email, c.email)
+}
+
+func newContact(email string, name string) (contact, error) {
+	if email == "" || name == "" {
+		return contact{}, errors.New("email et nom ne doivent pas être vides")
+	}
+	return contact{email: email, name: name}, nil
 }
 
 func main() {
@@ -33,12 +45,10 @@ func main() {
 		if *email == "" || *name == "" {
 			fmt.Print("Il manque un champ nécessaire")
 		} else {
-			c[len(c)+1] = contact{
-				email: *email,
-				name:  *name,
-			}
-			fmt.Printf("info du contact ajouté index : %v | adresse mail %v | nom : %v \n", len(c), *email, *name)
-
+			index := len(c) + 1
+			nContact, _ := newContact(*email, *name)
+			c[len(c)+1] = nContact
+			c[index].Display(index)
 		}
 
 	} else {
@@ -82,10 +92,8 @@ func addContact(c map[int]contact, reader *bufio.Reader) {
 	fmt.Println("Veuillez spécifier un nom:")
 	b, err2 := reader.ReadString('\n')
 	if err1 == nil && err2 == nil {
-		c[len(c)+1] = contact{
-			email: strings.TrimSpace(a),
-			name:  strings.TrimSpace(b),
-		}
+		nContact, _ := newContact(a, b)
+		c[len(c)+1] = nContact
 	}
 	fmt.Printf("info du contact ajouté index : %v | adresse mail %v | nom : %v \n", len(c), a, b)
 }
